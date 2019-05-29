@@ -1,6 +1,10 @@
 ---
 title: 读书不觉以春深，一寸光阴一寸金
 date: 2019-05-29 10:02:37
+categories: 
+  - "vue"
+tags: 
+  - "ionic"
 ---
 
 ### 换电脑以及发布新文章
@@ -11,5 +15,10 @@ date: 2019-05-29 10:02:37
 4. 生成`hexo g`
 5. 部署 `hexo d`
 6. 新建页面`hexo new newPage`
+<!--more -->
+
+#### 本地运行
+
+`hexo serve`
 
 
