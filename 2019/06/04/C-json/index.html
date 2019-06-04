@@ -3,19 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Category: 诗词 | </title>
+  <title>C#中对json文件的读写 | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="走上人生巅峰">
-<meta name="keywords" content="web前端">
-<meta property="og:type" content="website">
-<meta property="og:title">
-<meta property="og:url" content="http://yoursite.com/categories/poems/index.html">
+  <meta name="description" content="C#(winform)对json文件的读写需要引用 Newtonsoft,读文件时若文件为空则至少保留一对{}否则会抛出异常 读文件并返回相关key值：12345678910111213141516public string readJson(string key)        &amp;#123;            try            &amp;#123;                stri">
+<meta name="keywords" content="C#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C#中对json文件的读写">
+<meta property="og:url" content="http://yoursite.com/2019/06/04/C-json/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="走上人生巅峰">
+<meta property="og:description" content="C#(winform)对json文件的读写需要引用 Newtonsoft,读文件时若文件为空则至少保留一对{}否则会抛出异常 读文件并返回相关key值：12345678910111213141516public string readJson(string key)        &amp;#123;            try            &amp;#123;                stri">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-04T06:16:17.628Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title">
-<meta name="twitter:description" content="走上人生巅峰">
+<meta name="twitter:title" content="C#中对json文件的读写">
+<meta name="twitter:description" content="C#(winform)对json文件的读写需要引用 Newtonsoft,读文件时若文件为空则至少保留一对{}否则会抛出异常 读文件并返回相关key值：12345678910111213141516public string readJson(string key)        &amp;#123;            try            &amp;#123;                stri">
   
     <link rel="alternate" href="/atom.xml" title type="application/atom+xml">
   
@@ -68,42 +69,89 @@
   </div>
 </div>
 
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap animated rubberBand">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/05/30/song-poems/" class="archive-article-date">
-  <time class="post-time" datetime="2019-05-30T09:33:14.000Z" itemprop="datePublished">
-    <span class="post-month">5月</span><br>
-    <span class="post-day">30</span>
+        <section id="main"><article id="post-C-json" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/04/C-json/" class="article-date">
+  <time class="post-time" datetime="2019-06-04T11:27:16.000Z" itemprop="datePublished">
+    <span class="post-month">6月</span><br>
+    <span class="post-day">04</span>
   </time>
 </a>
+
+  </div>
+  <div class="article-inner">
+    
+    
+    <header class="article-header">
       
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/30/song-poems/">一剪梅·舟过吴江</a>
+    <h1 class="article-title" itemprop="name">
+      C#中对json文件的读写
     </h1>
   
 
-    </header>
+      <div>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/后端/">后端</a>
   </div>
+
+        
+        
+  &nbsp; | &nbsp;
+  <div class="view-box">
+    <span id="/2019/06/04/C-json/" class="leancloud_visitors" data-flag-title="C#中对json文件的读写">
+      阅读次数&nbsp;<span class="leancloud-visitors-count"></span>
+    </span>
+  </div>
+  
+
+
+ &nbsp;&nbsp;
+        
+
+      </div>
+      <div>
+
+      </div>
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      <h3 id="C-winform-对json文件的读写"><a href="#C-winform-对json文件的读写" class="headerlink" title="C#(winform)对json文件的读写"></a>C#(winform)对json文件的读写</h3><p>需要引用 <code>Newtonsoft</code>,读文件时若文件为空则至少保留一对<code>{}</code>否则会抛出异常</p>
+<p>读文件并返回相关key值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">public string readJson(string key)</span><br><span class="line">        &#123;</span><br><span class="line">            try</span><br><span class="line">            &#123;</span><br><span class="line">                string fp = new DirectoryInfo(&quot;../../&quot;).FullName + &quot;info.json&quot;;</span><br><span class="line">                StreamReader file = File.OpenText(fp);</span><br><span class="line">                JsonTextReader reader = new JsonTextReader(file);</span><br><span class="line">                JObject jsonObject = (JObject)JToken.ReadFrom(reader);</span><br><span class="line">                file.Close();</span><br><span class="line">                return (string)jsonObject[key];</span><br><span class="line">            &#125;catch(Exception ex)</span><br><span class="line">            &#123;</span><br><span class="line">                throw new Exception(ex.Message);</span><br><span class="line">            &#125;</span><br><span class="line">            </span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>写文件（传入key和value）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">public void writeJson(string key,string value) &#123;</span><br><span class="line">    try</span><br><span class="line">    &#123;</span><br><span class="line">        string fp = new DirectoryInfo(&quot;../../&quot;).FullName + &quot;info.json&quot;;</span><br><span class="line">        string json = File.ReadAllText(fp);</span><br><span class="line">        dynamic jsonObj = Newtonsoft.Json.JsonConvert.DeserializeObject(json);</span><br><span class="line">        if(jsonObj[key] != null)</span><br><span class="line">        &#123;</span><br><span class="line">            jsonObj[key] = value;</span><br><span class="line">        &#125;else</span><br><span class="line">        &#123;</span><br><span class="line">            jsonObj.Add(new JProperty(key,value));</span><br><span class="line">        &#125;</span><br><span class="line">        string output = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObj, Newtonsoft.Json.Formatting.Indented);</span><br><span class="line">        File.WriteAllText(fp,output);</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">    catch(Exception ex)</span><br><span class="line">    &#123;</span><br><span class="line">        throw new Exception(ex.Message);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+
+      <time class="time" style="color: #777777;float: right;" datetime="2019-06-04T11:27:16.000Z" itemprop="datePublished">
+        &nbsp;&nbsp;<span class="month">2019-06-04 11:27:16</span><br>
+      </time>
+      <!-- <a data-url="http://yoursite.com/2019/06/04/C-json/" data-id="cjwhf8xtj0002kgv755y3g1oc" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C#</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2019/06/01/dart/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">dart中对象数组的定义</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
 
 
 </section>
