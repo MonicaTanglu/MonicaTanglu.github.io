@@ -56,10 +56,10 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map: 
-  nodejs: nodejs
   vue: vue
   诗词: poems
   flutter: flutter
+  后端: 后端
 tag_map:
   - ionic
   - angular
@@ -67,6 +67,8 @@ tag_map:
   - 唐诗
   - 元曲
   - dart
+  - C#
+  - nodejs
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
