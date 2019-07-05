@@ -60,6 +60,8 @@ category_map:
   诗词: poems
   flutter: flutter
   后端: 后端
+  angular: angular
+  js: js
 tag_map:
   - ionic
   - angular
@@ -69,6 +71,7 @@ tag_map:
   - dart
   - C#
   - nodejs
+  - js
 
 # Date / Time format
 ## Hexo uses Moment.js to parse and display date
