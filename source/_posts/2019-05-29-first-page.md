@@ -15,6 +15,7 @@ tags:
 4. 生成`hexo g`
 5. 部署 `hexo d`
 6. 新建页面`hexo new newPage`
+7. `hexo clean` 清除缓存文件和生成的静态文件（当发现对站点的更改不生效时，运行此命令）
 <!--more -->
 
 #### 本地运行
