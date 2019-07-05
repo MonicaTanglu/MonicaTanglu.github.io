@@ -3,19 +3,20 @@
 <head><meta name="generator" content="Hexo 3.8.0">
   <meta charset="utf-8">
   
-  <title>Category: vue | </title>
+  <title>angular的一些基础知识 | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="走上人生巅峰">
-<meta name="keywords" content="web前端">
-<meta property="og:type" content="website">
-<meta property="og:title">
-<meta property="og:url" content="http://yoursite.com/categories/vue/index.html">
+  <meta name="description" content="angular一些使用说明NgZone的简单使用 在angular中，如果模板中有一些变量在组件中经常变动，那么频繁的变动会造成性能损耗，angular提供了NgZone服务，对于一些频繁的操作可以不去触发变更检测     在组件中引入NgZone再将其注入123import &amp;#123;NgZone&amp;#125; from @angular/coreconstructor(private zone">
+<meta name="keywords" content="angular">
+<meta property="og:type" content="article">
+<meta property="og:title" content="angular的一些基础知识">
+<meta property="og:url" content="http://yoursite.com/2019/06/11/angular/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="走上人生巅峰">
+<meta property="og:description" content="angular一些使用说明NgZone的简单使用 在angular中，如果模板中有一些变量在组件中经常变动，那么频繁的变动会造成性能损耗，angular提供了NgZone服务，对于一些频繁的操作可以不去触发变更检测     在组件中引入NgZone再将其注入123import &amp;#123;NgZone&amp;#125; from @angular/coreconstructor(private zone">
 <meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-11T12:09:47.511Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title">
-<meta name="twitter:description" content="走上人生巅峰">
+<meta name="twitter:title" content="angular的一些基础知识">
+<meta name="twitter:description" content="angular一些使用说明NgZone的简单使用 在angular中，如果模板中有一些变量在组件中经常变动，那么频繁的变动会造成性能损耗，angular提供了NgZone服务，对于一些频繁的操作可以不去触发变更检测     在组件中引入NgZone再将其注入123import &amp;#123;NgZone&amp;#125; from @angular/coreconstructor(private zone">
   
     <link rel="alternate" href="/atom.xml" title type="application/atom+xml">
   
@@ -68,42 +69,117 @@
   </div>
 </div>
 
-        <section id="main">
-  
-  
-    
-    
-      
-      
-      <section class="archives-wrap animated rubberBand">
-        <div class="archive-year-wrap">
-          <a href="/archives/2019" class="archive-year">2019</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      <a href="/2019/05/29/first-page/" class="archive-article-date">
-  <time class="post-time" datetime="2019-05-29T10:02:37.000Z" itemprop="datePublished">
-    <span class="post-month">5月</span><br>
-    <span class="post-day">29</span>
+        <section id="main"><article id="post-angular" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/11/angular/" class="article-date">
+  <time class="post-time" datetime="2019-06-11T11:27:40.000Z" itemprop="datePublished">
+    <span class="post-month">6月</span><br>
+    <span class="post-day">11</span>
   </time>
 </a>
+
+  </div>
+  <div class="article-inner">
+    
+    
+    <header class="article-header">
       
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2019/05/29/first-page/">读书不觉以春深，一寸光阴一寸金</a>
+    <h1 class="article-title" itemprop="name">
+      angular的一些基础知识
     </h1>
   
 
-    </header>
+      <div>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/angular/">angular</a>
   </div>
+
+        
+        
+  &nbsp; | &nbsp;
+  <div class="view-box">
+    <span id="/2019/06/11/angular/" class="leancloud_visitors" data-flag-title="angular的一些基础知识">
+      阅读次数&nbsp;<span class="leancloud-visitors-count"></span>
+    </span>
+  </div>
+  
+
+
+ &nbsp;&nbsp;
+        
+
+      </div>
+      <div>
+
+      </div>
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      <h3 id="angular一些使用说明"><a href="#angular一些使用说明" class="headerlink" title="angular一些使用说明"></a>angular一些使用说明</h3><h4 id="NgZone的简单使用"><a href="#NgZone的简单使用" class="headerlink" title="NgZone的简单使用"></a>NgZone的简单使用</h4><blockquote>
+<p>在<code>angular</code>中，如果模板中有一些变量在组件中经常变动，那么频繁的变动会造成性能损耗，<code>angular</code>提供了<code>NgZone</code>服务，对于一些频繁的操作可以不去触发变更检测  </p>
+</blockquote>
+<ol>
+<li>在组件中引入<code>NgZone</code>再将其注入<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import &#123;NgZone&#125; from @angular/core</span><br><span class="line"></span><br><span class="line">constructor(private zone:NgZone) &#123;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<a id="more"></a>
+<ol start="2">
+<li><p>调用<code>runOutsideAngular</code>方法，angular不会对里面的变化进行跟踪</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">this.zone.runOutsideAngular(() =&gt; &#123;</span><br><span class="line">    for(let i = 0; i&lt; 100;i++&gt;) &#123;</span><br><span class="line">        setInterval(() =&gt; this.counter ++,10)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>重新跟踪变化</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">this.zone.run(() =&gt; &#123;</span><br><span class="line">    setTimeout(() =&gt; this.foo = this.foo,1000)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="PLATFORM-ID"><a href="#PLATFORM-ID" class="headerlink" title="PLATFORM_ID"></a>PLATFORM_ID</h4><p>A token that indicates an opaque platform id. (表示平台id的token)</p>
+<h4 id="isPlatformBrowser"><a href="#isPlatformBrowser" class="headerlink" title="isPlatformBrowser"></a>isPlatformBrowser</h4><p>Returns whether a platform id represents a browser platform.（。。。。）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">isPlatformBrowser(platformId: Object): boolean</span><br></pre></td></tr></table></figure></p>
+<h4 id="ElementRef"><a href="#ElementRef" class="headerlink" title="ElementRef"></a>ElementRef</h4><p> 在应用层直接操作DOM,会造成应用层与渲染层之间的强耦合，导致应用无法运行在不同的环境</p>
+<h4 id="super"><a href="#super" class="headerlink" title="super"></a>super</h4><ol>
+<li>constructor内的super()执行父类的构造函数。必须至少执行一次</li>
+<li>一般方法内的super.method()执行父类的（未必同名）方法,不是必须</li>
+</ol>
+
+      
+    </div>
+    <footer class="article-footer">
+
+      <time class="time" style="color: #777777;float: right;" datetime="2019-06-11T11:27:40.000Z" itemprop="datePublished">
+        &nbsp;&nbsp;<span class="month">2019-06-11 11:27:40</span><br>
+      </time>
+      <!-- <a data-url="http://yoursite.com/2019/06/11/angular/" data-id="cjxppkbo10008ywv7ydfvs4vl" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+<nav id="article-nav">
+  
+    <a href="/2019/06/11/angular-ngModel/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          angular-ngModel
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/04/C-json/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">C#中对json文件的读写</div>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-  
-    </div></section>
-  
+
 
 
 </section>

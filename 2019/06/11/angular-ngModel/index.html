@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>angular-ngModel | </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="引用 https://segmentfault.com/a/1190000011733166  ngModel的实现ControlValueAccessor controlValueAccessor时一个连接表达模型和视图的接口，自定义的表达空间必须实现这个接口，他的作用是    把form模型的值映射到视图中 当视图发生变化时，通知form directives或form controls">
+<meta name="keywords" content="angular">
+<meta property="og:type" content="article">
+<meta property="og:title" content="angular-ngModel">
+<meta property="og:url" content="http://yoursite.com/2019/06/11/angular-ngModel/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="引用 https://segmentfault.com/a/1190000011733166  ngModel的实现ControlValueAccessor controlValueAccessor时一个连接表达模型和视图的接口，自定义的表达空间必须实现这个接口，他的作用是    把form模型的值映射到视图中 当视图发生变化时，通知form directives或form controls">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-06-11T06:52:47.464Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="angular-ngModel">
+<meta name="twitter:description" content="引用 https://segmentfault.com/a/1190000011733166  ngModel的实现ControlValueAccessor controlValueAccessor时一个连接表达模型和视图的接口，自定义的表达空间必须实现这个接口，他的作用是    把form模型的值映射到视图中 当视图发生变化时，通知form directives或form controls">
+  
+    <link rel="alternate" href="/atom.xml" title type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/plugin/bganimation/bg.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <div class="widget-wrap mobile-header">
+  <h3 class="widget-title"></h3>
+  <div class="widget">
+    <img class="avatar" src="https://avatars0.githubusercontent.com/u/29689157?s=460&amp;v=4">
+    <h2 class="author">monica</h2>
+    <h3 class="description">走上人生巅峰</h3>
+    <div class="count-box">
+      <a href="/archives"><div><strong>8</strong><br>文章</div></a>
+      <a href="/categories"><div><strong>6</strong><br>分类</div></a>
+      <a href="/tags"><div><strong>6</strong><br>标签</div></a>
+    </div>
+    <ul class="blog-link">
+     
+          <a href="/" title="Home">
+            <li>主页</li>
+          </a>
+        
+          <a href="/archives" title="Archives">
+            <li>归档</li>
+          </a>
+        
+          <a href="/categories" title="Categories">
+            <li>分类</li>
+          </a>
+        
+          <a href="/tags" title="Tags">
+            <li>标签</li>
+          </a>
+        
+    </ul>
+  </div>
+</div>
+
+        <section id="main"><article id="post-angular-ngModel" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/06/11/angular-ngModel/" class="article-date">
+  <time class="post-time" datetime="2019-06-11T14:23:38.000Z" itemprop="datePublished">
+    <span class="post-month">6月</span><br>
+    <span class="post-day">11</span>
+  </time>
+</a>
+
+  </div>
+  <div class="article-inner">
+    
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      angular-ngModel
+    </h1>
+  
+
+      <div>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/angular/">angular</a>
+  </div>
+
+        
+        
+  &nbsp; | &nbsp;
+  <div class="view-box">
+    <span id="/2019/06/11/angular-ngModel/" class="leancloud_visitors" data-flag-title="angular-ngModel">
+      阅读次数&nbsp;<span class="leancloud-visitors-count"></span>
+    </span>
+  </div>
+  
+
+
+ &nbsp;&nbsp;
+        
+
+      </div>
+      <div>
+
+      </div>
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      <blockquote>
+<p>引用 <a href="https://segmentfault.com/a/1190000011733166" target="_blank" rel="noopener">https://segmentfault.com/a/1190000011733166</a></p>
+</blockquote>
+<h3 id="ngModel的实现"><a href="#ngModel的实现" class="headerlink" title="ngModel的实现"></a>ngModel的实现</h3><h4 id="ControlValueAccessor"><a href="#ControlValueAccessor" class="headerlink" title="ControlValueAccessor"></a>ControlValueAccessor</h4><blockquote>
+<p>controlValueAccessor时一个连接表达模型和视图的接口，自定义的表达空间必须实现这个接口，他的作用是  </p>
+<ul>
+<li>把form模型的值映射到视图中</li>
+<li>当视图发生变化时，通知form directives或form controls</li>
+</ul>
+</blockquote>
+<p>Angular 引入这个接口的原因是，不同的输入控件数据更新方式是不一样的。例如，对于我们常用的文本输入框来说，我们是设置它的 value 值，而对于复选框 (checkbox) 我们是设置它的 checked 属性。实际上，不同类型的输入控件都有一个 ControlValueAccessor，用来更新视图<br><a id="more"></a><br><code>angular</code>中常见的<code>ControlValueAccesor</code>有：</p>
+<ul>
+<li><code>DefaultValueAccessor</code> 用于text和textarea类型的输入控件</li>
+<li><code>SelectControlValueAccessor</code> 用于 select 选择控件</li>
+<li><code>CheckboxControlValueAccessor</code> 用于 checkbox 复选控件</li>
+</ul>
+<p><strong> 实现ControlValueAccessor接口 </strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">export interface ControlValueAccessor &#123;</span><br><span class="line">    writeValue(obj:any):void;</span><br><span class="line">    registerOnchange(fn:any):void;</span><br><span class="line">    registerOnTouched(fn:any):void;</span><br><span class="line">    setDisabledState?(isDisabled:boolean):void;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li><code>writeValue(obj:any)</code>用于将模型中的新值写入视图或DOM属性中，即<code>model-&gt;view</code></li>
+<li><code>registerOnchange(fn:any)</code> 设置当控件接收到change事件后调用的函数，可以用来通知外部，组件已经发生变化，即<code>view-model</code></li>
+<li><code>registerOnTouched(fn:any)</code> 设置当控件接收到 touched 事件后，调用的函数</li>
+<li><code>setDisabledState?(isDisabled:boolean)</code> 当控件状态变成disabled或从disabled状态变化成enable状态时会调用该函数。该函数会根据参数值，启用或禁用指定的dom元素  </li>
+</ul>
+<h4 id="注册成为表单控件"><a href="#注册成为表单控件" class="headerlink" title="注册成为表单控件"></a>注册成为表单控件</h4><ul>
+<li><code>NG_VALUE_ACCESSOR</code>： token类型为<code>controlValueAccessor</code>，将控件本身注册到框架成为一个可以让表单访问其值的控件</li>
+<li><code>NG_VALIDATORS</code>: 将控件注册成为一个可以让表单得到其验证状态的控件，<code>NG_VALIDATORS</code>的token类型为function或validator，配合useExisting,可以让控件只暴露对应的function或Validator的validate方法。针对token为Validator类型来说，控件实现了validate方法就可以实现表单控件验证  </li>
+<li><code>forwardRef</code>: 向前引用，允许我们引用一个尚未定义的对象  </li>
+<li><code>multi</code>: 设为true，表示这个token对应多个依赖项，使用相同的token去获取依赖项的时候，获取的是已注册的依赖对象列表。如果不设置multi为true，那么对于相同token的提供商来说，后定义的提供商会覆盖前面已定义的提供商  </li>
+</ul>
+<p>步骤一： 创建Token为NG_VALUE_ACCESSOR的提供商<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">    selector: &apos;exe-counter&apos;,</span><br><span class="line">    ...</span><br><span class="line">    providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: NG_VALUE_ACCESSOR,</span><br><span class="line">      useExisting: forwardRef(() =&gt; CounterComponent ),</span><br><span class="line">      multi: true</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<p>步骤二：创建Token为NG_VALIDATORS的表单控件验证器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">@Component(&#123;</span><br><span class="line">    selector: &apos;exe-counter&apos;,</span><br><span class="line">    ...</span><br><span class="line">    providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: NG_VALUE_ACCESSOR,</span><br><span class="line">      useExisting: forwardRef(() =&gt; CounterComponent ),</span><br><span class="line">      multi: true</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      provide: NG_VALIDATORS,</span><br><span class="line">      useValue: validateCounterRange,</span><br><span class="line">      multi: true</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br></pre></td></tr></table></figure></p>
+<p>CounterComponent 组件的完整代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line">import &#123; Component, Input, forwardRef &#125; from &apos;@angular/core&apos;;</span><br><span class="line">import &#123;</span><br><span class="line">    ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS,</span><br><span class="line">    AbstractControl, ValidatorFn, ValidationErrors, FormControl</span><br><span class="line">&#125; from &apos;@angular/forms&apos;;</span><br><span class="line"></span><br><span class="line">export const EXE_COUNTER_VALUE_ACCESSOR: any = &#123;</span><br><span class="line">    provide: NG_VALUE_ACCESSOR,</span><br><span class="line">    useExisting: forwardRef(() =&gt; CounterComponent),</span><br><span class="line">    multi: true</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export const validateCounterRange: ValidatorFn = (control: AbstractControl): </span><br><span class="line">  ValidationErrors =&gt; &#123;</span><br><span class="line">    return (control.value &gt; 10 || control.value &lt; 0) ?</span><br><span class="line">        &#123; &apos;rangeError&apos;: &#123; current: control.value, max: 10, min: 0 &#125; &#125; : null;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">export const EXE_COUNTER_VALIDATOR = &#123;</span><br><span class="line">    provide: NG_VALIDATORS,</span><br><span class="line">    useValue: validateCounterRange,</span><br><span class="line">    multi: true</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">@Component(&#123;</span><br><span class="line">    selector: &apos;exe-counter&apos;,</span><br><span class="line">    template: `</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">      &lt;p&gt;当前值: &#123;&#123; count &#125;&#125;&lt;/p&gt;</span><br><span class="line">      &lt;button (click)=&quot;increment()&quot;&gt; + &lt;/button&gt;</span><br><span class="line">      &lt;button (click)=&quot;decrement()&quot;&gt; - &lt;/button&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    `,</span><br><span class="line">    providers: [EXE_COUNTER_VALUE_ACCESSOR, EXE_COUNTER_VALIDATOR]</span><br><span class="line">&#125;)</span><br><span class="line">export class CounterComponent implements ControlValueAccessor &#123;</span><br><span class="line">    @Input() _count: number = 0;</span><br><span class="line"></span><br><span class="line">    get count() &#123;</span><br><span class="line">        return this._count;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    set count(value: number) &#123;</span><br><span class="line">        this._count = value;</span><br><span class="line">        this.propagateChange(this._count);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    propagateChange = (_: any) =&gt; &#123; &#125;;</span><br><span class="line"></span><br><span class="line">    writeValue(value: any) &#123;</span><br><span class="line">        if (value) &#123;</span><br><span class="line">            this.count = value;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    registerOnChange(fn: any) &#123;</span><br><span class="line">        this.propagateChange = fn;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    registerOnTouched(fn: any) &#123; &#125;</span><br><span class="line"></span><br><span class="line">    increment() &#123;</span><br><span class="line">        this.count++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    decrement() &#123;</span><br><span class="line">        this.count--;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    <footer class="article-footer">
+
+      <time class="time" style="color: #777777;float: right;" datetime="2019-06-11T14:23:38.000Z" itemprop="datePublished">
+        &nbsp;&nbsp;<span class="month">2019-06-11 14:23:38</span><br>
+      </time>
+      <!-- <a data-url="http://yoursite.com/2019/06/11/angular-ngModel/" data-id="cjxppkbnz0007ywv72ng37gm8" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+<nav id="article-nav">
+  
+    <a href="/2019/07/05/js-loop/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">上一篇</strong>
+      <div class="article-nav-title">
+        
+          js遍历数组和对象
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2019/06/11/angular/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">angular的一些基础知识</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+  <h3 class="widget-title"></h3>
+  <div class="widget">
+    <h1 class="blog-title"></h1>
+    <h2 class="blog-subtitle">戚戚于贫贱，汲汲于富贵</h2>
+    <ul class="blog-link">
+     
+          <a href="/" title="Home">
+            <li>主页</li>
+          </a>
+        
+          <a href="/archives" title="Archives">
+            <li>归档</li>
+          </a>
+        
+          <a href="/categories" title="Categories">
+            <li>分类</li>
+          </a>
+        
+          <a href="/tags" title="Tags">
+            <li>标签</li>
+          </a>
+        
+    </ul>
+  </div>
+</div>
+
+  
+    <div class="widget-wrap">
+  <h3 class="widget-title"></h3>
+  <div class="widget">
+    <img class="avatar" src="https://avatars0.githubusercontent.com/u/29689157?s=460&amp;v=4">
+    <h2 class="author">monica</h2>
+    <h3 class="description">走上人生巅峰</h3>
+    <div class="count-box">
+      <a href="/archives"><div><strong>8</strong><br>文章</div></a>
+      <a href="/categories"><div><strong>6</strong><br>分类</div></a>
+      <a href="/tags"><div><strong>6</strong><br>标签</div></a>
+    </div>
+
+
+
+    <div class="social-link">
+      
+        <a class="hvr-bounce-in" href="http://github.com/MonicaTanglu" target="_blank" title="Github">
+          Github
+        </a>
+      
+    </div>
+
+    <div class="friend-link">
+      <h2>友情链接</h2>
+      
+        <a class="hvr-bounce-in" href="https://segmentfault.com/u/mona_5965eb1b41f5b" target="_blank" title="忘羡">
+          忘羡
+        </a>
+      
+    </div>
+  </div>
+</div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy;2018 - 2019 monica<br>
+      由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动 | 
+      主题-<a href="https://github.com/ShanaMaid/hexo-theme-shana">Shana</a>
+      
+    </div>
+    
+  </div>
+</footer>
+    </div>
+    
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//apps.bdimg.com/libs/wow/0.1.6/wow.min.js"></script>
+<script>
+new WOW().init();
+</script>   
+
+
+  <link rel="stylesheet" href="/plugin/fancybox/jquery.fancybox.css">
+  <script src="/plugin/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+  <section class="hidden-xs"> 
+  <ul class="cb-slideshow"> 
+    <li><span>苟利</span></li> 
+    <li><span>国家</span></li> 
+    <li><span>生死以</span></li> 
+    <li><span>岂能</span></li> 
+    <li><span>祸福</span></li> 
+    <li><span>趋避之</span></li> 
+  </ul>
+</section>
+<script src="/js/script.js"></script>
+
+
+
+
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("lYoBPxLlJuIWMi2qAXlEqPL8-gzGzoHsz", "9CwMrg5JFKAOJLRQCR2xb1Oi");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.article-title').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+  </div>
+</body>
+</html>
