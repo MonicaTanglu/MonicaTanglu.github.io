@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="utf-8">
+  
+  <title>express中间件 | </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Express应用程序本质上是一系列中间件函数调用。中间件可以做下面这些事情  执行任何代码 修改request和response对象 结束请求（响应周期） 调用堆栈中的下一个中间件函数如果当前中间件没有结束请求，那么需要调用next(),将控制权传递给下一个中间件函数，否则请求会被挂起，后边定义的中间件将不会执行">
+<meta name="keywords" content="express">
+<meta property="og:type" content="article">
+<meta property="og:title" content="express中间件">
+<meta property="og:url" content="http://yoursite.com/2019/07/08/middleware/index.html">
+<meta property="og:site_name">
+<meta property="og:description" content="Express应用程序本质上是一系列中间件函数调用。中间件可以做下面这些事情  执行任何代码 修改request和response对象 结束请求（响应周期） 调用堆栈中的下一个中间件函数如果当前中间件没有结束请求，那么需要调用next(),将控制权传递给下一个中间件函数，否则请求会被挂起，后边定义的中间件将不会执行">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://i2.tiimg.com/693193/26be5c48310c2b25.png">
+<meta property="og:image" content="http://i2.tiimg.com/693193/c10141f50a334404.png">
+<meta property="og:updated_time" content="2019-07-08T11:41:24.336Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="express中间件">
+<meta name="twitter:description" content="Express应用程序本质上是一系列中间件函数调用。中间件可以做下面这些事情  执行任何代码 修改request和response对象 结束请求（响应周期） 调用堆栈中的下一个中间件函数如果当前中间件没有结束请求，那么需要调用next(),将控制权传递给下一个中间件函数，否则请求会被挂起，后边定义的中间件将不会执行">
+<meta name="twitter:image" content="http://i2.tiimg.com/693193/26be5c48310c2b25.png">
+  
+    <link rel="alternate" href="/atom.xml" title type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/plugin/bganimation/bg.css">
+  
+
+</head>
+</html>
+<body>
+  <div id="container">
+    <div id="wrap">
+      <div class="outer">
+        <div class="widget-wrap mobile-header">
+  <h3 class="widget-title"></h3>
+  <div class="widget">
+    <img class="avatar" src="https://avatars0.githubusercontent.com/u/29689157?s=460&amp;v=4">
+    <h2 class="author">monica</h2>
+    <h3 class="description">走上人生巅峰</h3>
+    <div class="count-box">
+      <a href="/archives"><div><strong>9</strong><br>文章</div></a>
+      <a href="/categories"><div><strong>7</strong><br>分类</div></a>
+      <a href="/tags"><div><strong>7</strong><br>标签</div></a>
+    </div>
+    <ul class="blog-link">
+     
+          <a href="/" title="Home">
+            <li>主页</li>
+          </a>
+        
+          <a href="/archives" title="Archives">
+            <li>归档</li>
+          </a>
+        
+          <a href="/categories" title="Categories">
+            <li>分类</li>
+          </a>
+        
+          <a href="/tags" title="Tags">
+            <li>标签</li>
+          </a>
+        
+    </ul>
+  </div>
+</div>
+
+        <section id="main"><article id="post-middleware" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/07/08/middleware/" class="article-date">
+  <time class="post-time" datetime="2019-07-08T14:43:50.000Z" itemprop="datePublished">
+    <span class="post-month">7月</span><br>
+    <span class="post-day">08</span>
+  </time>
+</a>
+
+  </div>
+  <div class="article-inner">
+    
+    
+    <header class="article-header">
+      
+  
+    <h1 class="article-title" itemprop="name">
+      express中间件
+    </h1>
+  
+
+      <div>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/nodejs/">nodejs</a>
+  </div>
+
+        
+        
+  &nbsp; | &nbsp;
+  <div class="view-box">
+    <span id="/2019/07/08/middleware/" class="leancloud_visitors" data-flag-title="express中间件">
+      阅读次数&nbsp;<span class="leancloud-visitors-count"></span>
+    </span>
+  </div>
+  
+
+
+ &nbsp;&nbsp;
+        
+
+      </div>
+      <div>
+
+      </div>
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      <p>Express应用程序本质上是一系列中间件函数调用。<br>中间件可以做下面这些事情</p>
+<ul>
+<li>执行任何代码</li>
+<li>修改<code>request</code>和<code>response</code>对象</li>
+<li>结束请求（响应周期）</li>
+<li>调用堆栈中的下一个中间件函数<br>如果当前中间件没有结束请求，那么需要调用<code>next()</code>,将控制权传递给下一个中间件函数，否则请求会被挂起，后边定义的中间件将不会执行</li>
+</ul>
+<a id="more"></a>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'first'</span>)</span><br><span class="line">    <span class="comment">// next()</span></span><br><span class="line">&#125;)</span><br><span class="line">app.post(<span class="string">'/info'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'****POST*****'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(req.body)</span><br><span class="line">    res.status(<span class="number">200</span>).send(req.body)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>使用<code>postman</code>模拟请求<code>http://localhost:3002/info</code>,请求会在第一个中间件挂起，不会执行到第二个<br><img src="http://i2.tiimg.com/693193/26be5c48310c2b25.png" alt="有next"><br><img src="http://i2.tiimg.com/693193/c10141f50a334404.png" alt="没有next"><br><code>express</code>将中间件等信息存放在<code>stack</code>中，如果没有匹配到合适的中间件或者没有结束请求，那么就会循环往下匹配，直到最后一个。<br>express可以使用下面这些类型的中间件：</p>
+<ul>
+<li><code>Application-level</code></li>
+<li><code>Router-level</code></li>
+<li><code>Built-in</code> 内置中间件</li>
+<li><code>Error-handling</code>错误处理中间件</li>
+<li><code>Third-party</code>第三方中间件</li>
+</ul>
+<h3 id="Application-level-中间件"><a href="#Application-level-中间件" class="headerlink" title="Application-level 中间件"></a>Application-level 中间件</h3><p>使用<code>app.use()</code>和<code>app.METHOD()</code>将中间件绑定到app对象。<code>METHOD</code>为<code>get,put、post</code>等<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">执行匹配任何路径（这里省略/）</span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span>(<span class="params">req,res,next</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">&#125;)</span><br><span class="line">执行匹配/user路径的任何http请求</span><br><span class="line">app.use(<span class="string">'/user'</span>,(req,res,next)=&gt;&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">&#125;)</span><br><span class="line">执行匹配/user/:id路径的<span class="keyword">get</span>请求</span><br><span class="line">app.<span class="keyword">get</span>('/user/:id',(req,res,next)=&gt;&#123;</span><br><span class="line">    <span class="comment">//do something</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="Router-level-中间件"><a href="#Router-level-中间件" class="headerlink" title="Router-level 中间件"></a>Router-level 中间件</h3><p>和<code>Application-level</code>工作方式类似，但是它是绑定在<code>express.Router()</code>上的</p>
+<h3 id="Error-handling-中间件"><a href="#Error-handling-中间件" class="headerlink" title="Error-handling 中间件"></a>Error-handling 中间件</h3><p>定义方法差不多，只是它接收四个参数，使用相关方法如下<br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">var</span> bodyParser = <span class="built_in">require</span>(<span class="string">'body-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> app = express()</span><br><span class="line"><span class="keyword">var</span> port = <span class="string">'3002'</span></span><br><span class="line">app.use(bodyParser.json())</span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'first'</span>)</span><br><span class="line">    next()</span><br><span class="line">&#125;)</span><br><span class="line">app.post(<span class="string">'/info'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'****POST*****'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(req.body)</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'测试'</span>)</span><br><span class="line">    <span class="comment">// res.status(200).send(req.body)</span></span><br><span class="line">&#125;)</span><br><span class="line"></span><br><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">err, req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.error(err)</span><br><span class="line">    res.status(<span class="number">500</span>).send(err.message)</span><br><span class="line">&#125;)</span><br><span class="line">app.listen(port, () =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">`localhost:<span class="subst">$&#123;port&#125;</span>`</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure></p>
+<h3 id="内置中间件"><a href="#内置中间件" class="headerlink" title="内置中间件"></a>内置中间件</h3><p>包含在<code>express</code>中的中间件功能<br>内置的中间件有：</p>
+<ul>
+<li><p><code>express.static</code>提供静态资源</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将静态文件目录设置为项目根目录+/public</span></span><br><span class="line">app.use(express.static(__dirname + <span class="string">'/public'</span>));</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>express.json</code>使用JSON解析传入的请求(express 4.16.0+有效)<br>类似<code>body-parse</code>中的<code>bodyParse.json()</code></p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(express.json())</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>express.urlencoded</code>使用URL-encoded解析传入的请求(express 4.16.0+有效)<br>类似<code>body-parse</code>中<code>bodyParser.urlencoded()</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.use(express.urlencoded(&#123;extended:false&#125;))</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="第三方中间件"><a href="#第三方中间件" class="headerlink" title="第三方中间件"></a>第三方中间件</h3><p>需要安装模块获取需要的功能，然后在<code>application level</code>或者<code>router level</code>中加载到应用程序中,例如下面的增加<code>body-parser</code><br><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">'express'</span>)</span><br><span class="line"><span class="keyword">var</span> bodyParser = <span class="built_in">require</span>(<span class="string">'body-parser'</span>)</span><br><span class="line"><span class="keyword">var</span> app = express()</span><br><span class="line">app.use(bodyParser.json())</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>中间件next源码解析链接 <a href="https://www.cnblogs.com/aishangliming/p/6115359.html" target="_blank" rel="noopener">https://www.cnblogs.com/aishangliming/p/6115359.html</a> </p>
+</blockquote>
+
+      
+    </div>
+    <footer class="article-footer">
+
+      <time class="time" style="color: #777777;float: right;" datetime="2019-07-08T14:43:50.000Z" itemprop="datePublished">
+        &nbsp;&nbsp;<span class="month">2019-07-08 14:43:50</span><br>
+      </time>
+      <!-- <a data-url="http://yoursite.com/2019/07/08/middleware/" data-id="cjxu8zqld000820v7nhi0nqjz" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li></ul>
+
+    </footer>
+  </div>
+  
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2019/07/05/js-loop/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">下一篇</strong>
+      <div class="article-nav-title">js遍历数组和对象</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    <div class="widget-wrap">
+  <h3 class="widget-title"></h3>
+  <div class="widget">
+    <h1 class="blog-title"></h1>
+    <h2 class="blog-subtitle">戚戚于贫贱，汲汲于富贵</h2>
+    <ul class="blog-link">
+     
+          <a href="/" title="Home">
+            <li>主页</li>
+          </a>
+        
+          <a href="/archives" title="Archives">
+            <li>归档</li>
+          </a>
+        
+          <a href="/categories" title="Categories">
+            <li>分类</li>
+          </a>
+        
+          <a href="/tags" title="Tags">
+            <li>标签</li>
+          </a>
+        
+    </ul>
+  </div>
+</div>
+
+  
+    <div class="widget-wrap">
+  <h3 class="widget-title"></h3>
+  <div class="widget">
+    <img class="avatar" src="https://avatars0.githubusercontent.com/u/29689157?s=460&amp;v=4">
+    <h2 class="author">monica</h2>
+    <h3 class="description">走上人生巅峰</h3>
+    <div class="count-box">
+      <a href="/archives"><div><strong>9</strong><br>文章</div></a>
+      <a href="/categories"><div><strong>7</strong><br>分类</div></a>
+      <a href="/tags"><div><strong>7</strong><br>标签</div></a>
+    </div>
+
+
+
+    <div class="social-link">
+      
+        <a class="hvr-bounce-in" href="http://github.com/MonicaTanglu" target="_blank" title="Github">
+          Github
+        </a>
+      
+    </div>
+
+    <div class="friend-link">
+      <h2>友情链接</h2>
+      
+        <a class="hvr-bounce-in" href="https://segmentfault.com/u/mona_5965eb1b41f5b" target="_blank" title="忘羡">
+          忘羡
+        </a>
+      
+    </div>
+  </div>
+</div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy;2018 - 2019 monica<br>
+      由<a href="http://hexo.io/" target="_blank">Hexo</a>强力驱动 | 
+      主题-<a href="https://github.com/ShanaMaid/hexo-theme-shana">Shana</a>
+      
+    </div>
+    
+  </div>
+</footer>
+    </div>
+    
+
+<script src="//apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//apps.bdimg.com/libs/wow/0.1.6/wow.min.js"></script>
+<script>
+new WOW().init();
+</script>   
+
+
+  <link rel="stylesheet" href="/plugin/fancybox/jquery.fancybox.css">
+  <script src="/plugin/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+  <section class="hidden-xs"> 
+  <ul class="cb-slideshow"> 
+    <li><span>苟利</span></li> 
+    <li><span>国家</span></li> 
+    <li><span>生死以</span></li> 
+    <li><span>岂能</span></li> 
+    <li><span>祸福</span></li> 
+    <li><span>趋避之</span></li> 
+  </ul>
+</section>
+<script src="/js/script.js"></script>
+
+
+
+
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("lYoBPxLlJuIWMi2qAXlEqPL8-gzGzoHsz", "9CwMrg5JFKAOJLRQCR2xb1Oi");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.article-title').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+
+
+  </div>
+</body>
+</html>
