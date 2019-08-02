@@ -13,13 +13,13 @@
 <meta property="og:site_name">
 <meta property="og:description" content="Express应用程序本质上是一系列中间件函数调用。中间件可以做下面这些事情  执行任何代码 修改request和response对象 结束请求（响应周期） 调用堆栈中的下一个中间件函数如果当前中间件没有结束请求，那么需要调用next(),将控制权传递给下一个中间件函数，否则请求会被挂起，后边定义的中间件将不会执行">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:image" content="http://i2.tiimg.com/693193/26be5c48310c2b25.png">
-<meta property="og:image" content="http://i2.tiimg.com/693193/c10141f50a334404.png">
-<meta property="og:updated_time" content="2019-07-08T11:41:24.336Z">
+<meta property="og:image" content="http://yoursite.com/images/middle-next.png">
+<meta property="og:image" content="http://yoursite.com/images/middle-no-next.png">
+<meta property="og:updated_time" content="2019-08-02T01:24:16.370Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="express中间件">
 <meta name="twitter:description" content="Express应用程序本质上是一系列中间件函数调用。中间件可以做下面这些事情  执行任何代码 修改request和response对象 结束请求（响应周期） 调用堆栈中的下一个中间件函数如果当前中间件没有结束请求，那么需要调用next(),将控制权传递给下一个中间件函数，否则请求会被挂起，后边定义的中间件将不会执行">
-<meta name="twitter:image" content="http://i2.tiimg.com/693193/26be5c48310c2b25.png">
+<meta name="twitter:image" content="http://yoursite.com/images/middle-next.png">
   
     <link rel="alternate" href="/atom.xml" title type="application/atom+xml">
   
@@ -130,7 +130,7 @@
 </ul>
 <a id="more"></a>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">app.use(<span class="function"><span class="keyword">function</span> (<span class="params">req, res, next</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'first'</span>)</span><br><span class="line">    <span class="comment">// next()</span></span><br><span class="line">&#125;)</span><br><span class="line">app.post(<span class="string">'/info'</span>, (req, res) =&gt; &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'****POST*****'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(req.body)</span><br><span class="line">    res.status(<span class="number">200</span>).send(req.body)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>使用<code>postman</code>模拟请求<code>http://localhost:3002/info</code>,请求会在第一个中间件挂起，不会执行到第二个<br><img src="http://i2.tiimg.com/693193/26be5c48310c2b25.png" alt="有next"><br><img src="http://i2.tiimg.com/693193/c10141f50a334404.png" alt="没有next"><br><code>express</code>将中间件等信息存放在<code>stack</code>中，如果没有匹配到合适的中间件或者没有结束请求，那么就会循环往下匹配，直到最后一个。<br>express可以使用下面这些类型的中间件：</p>
+<p>使用<code>postman</code>模拟请求<code>http://localhost:3002/info</code>,请求会在第一个中间件挂起，不会执行到第二个<br><img src="/images/middle-next.png" alt="有next"><br><img src="/images/middle-no-next.png" alt="没有next"><br><code>express</code>将中间件等信息存放在<code>stack</code>中，如果没有匹配到合适的中间件或者没有结束请求，那么就会循环往下匹配，直到最后一个。<br>express可以使用下面这些类型的中间件：</p>
 <ul>
 <li><code>Application-level</code></li>
 <li><code>Router-level</code></li>
@@ -165,7 +165,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-07-08T14:43:50.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-07-08 14:43:50</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/07/08/middleware/" data-id="cjy8gq4h9000898v7hzq8evvw" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/07/08/middleware/" data-id="cjytfdvbt0008p8v7vvio9jvj" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li></ul>
