@@ -5,18 +5,18 @@
   
   <title>angular项目中输入延迟以及拖拽卡顿 | </title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="背景之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。 原因（可能）上面两个问题其实都和angular的机制有关。一个双向绑">
+  <meta name="description" content="背景之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。">
 <meta name="keywords" content="angular">
 <meta property="og:type" content="article">
 <meta property="og:title" content="angular项目中输入延迟以及拖拽卡顿">
 <meta property="og:url" content="http://yoursite.com/2019/11/13/angular-slow-performance/index.html">
 <meta property="og:site_name">
-<meta property="og:description" content="背景之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。 原因（可能）上面两个问题其实都和angular的机制有关。一个双向绑">
+<meta property="og:description" content="背景之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-11-13T07:08:21.931Z">
+<meta property="og:updated_time" content="2019-11-13T07:12:41.992Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="angular项目中输入延迟以及拖拽卡顿">
-<meta name="twitter:description" content="背景之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。 原因（可能）上面两个问题其实都和angular的机制有关。一个双向绑">
+<meta name="twitter:description" content="背景之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。">
   
     <link rel="alternate" href="/atom.xml" title type="application/atom+xml">
   
@@ -118,7 +118,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-      <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。</p>
+      <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。<br><a id="more"></a></p>
 <h3 id="原因（可能）"><a href="#原因（可能）" class="headerlink" title="原因（可能）"></a>原因（可能）</h3><p>上面两个问题其实都和angular的机制有关。一个双向绑定一个拖拽归根结底都是因为<code>angular</code>的变化检测<br>angular的双向绑定主要是脏数据检查，如果大量的检查，效率比较低。（双向绑定时向zone挂载一个异步函数，对数据改变是做处理，及时将变化反馈显示在页面上）可能就会输入延迟<br>拖拽（也是向zone挂载异步函数）则是因为angular对每个可移动像素的元素进行检测而且还可能涉及对dom的操作，当拖拽区域数量较为多时，绑定的函数就越多，angular需要检测的元素区域就越来越多，处理起来就越力不从心（即使元素隐藏也不代表不会进行变化检测）</p>
 <h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><ol>
 <li>对于双向绑定造成的输入延迟，停止使用双向绑定，改用单向绑定  </li>
@@ -135,7 +135,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-11-13T14:54:49.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-11-13 14:54:49</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/11/13/angular-slow-performance/" data-id="ck2wy3l09000jhwv7qz9wrm5p" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/11/13/angular-slow-performance/" data-id="ck2wy6gyl000lh0v7n8h6mekn" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li></ul>
