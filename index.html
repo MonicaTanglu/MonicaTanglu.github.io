@@ -42,7 +42,7 @@
     <h2 class="author">monica</h2>
     <h3 class="description">走上人生巅峰</h3>
     <div class="count-box">
-      <a href="/archives"><div><strong>10</strong><br>文章</div></a>
+      <a href="/archives"><div><strong>11</strong><br>文章</div></a>
       <a href="/categories"><div><strong>8</strong><br>分类</div></a>
       <a href="/tags"><div><strong>7</strong><br>标签</div></a>
     </div>
@@ -69,6 +69,86 @@
 </div>
 
         <section id="main">
+  
+    <article id="post-angular-slow-performance" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2019/11/13/angular-slow-performance/" class="article-date">
+  <time class="post-time" datetime="2019-11-13T14:54:49.000Z" itemprop="datePublished">
+    <span class="post-month">11月</span><br>
+    <span class="post-day">13</span>
+  </time>
+</a>
+
+  </div>
+  <div class="article-inner">
+    
+    
+    <header class="article-header">
+      
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2019/11/13/angular-slow-performance/">angular项目中输入延迟以及拖拽卡顿</a>
+    </h1>
+  
+
+      <div>
+        
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/angular/">angular</a>
+  </div>
+
+        
+        
+  &nbsp; | &nbsp;
+  <div class="view-box">
+    <span id="/2019/11/13/angular-slow-performance/" class="leancloud_visitors" data-flag-title="angular项目中输入延迟以及拖拽卡顿">
+      阅读次数&nbsp;<span class="leancloud-visitors-count"></span>
+    </span>
+  </div>
+  
+
+
+ &nbsp;&nbsp;
+        
+
+      </div>
+      <div>
+
+      </div>
+    </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+      <h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><p>之前有一个angular项目,页面上表单不算多，也就一百来个（这个不固定，有的地方多，有的地方少），但是再输入的时候会造成输入延迟，反应不灵敏，对用户体验极其不好。还有一个功能就是拖拽功能（原生，没有使用官方中的拖拽功能），从左边拖到右边区域，拖拽区域少的时候还挺流畅，但一旦有几百上千的时候反应极其的慢，佛系的人都要变暴躁。</p>
+<h3 id="原因（可能）"><a href="#原因（可能）" class="headerlink" title="原因（可能）"></a>原因（可能）</h3><p>上面两个问题其实都和angular的机制有关。一个双向绑定一个拖拽归根结底都是因为<code>angular</code>的变化检测<br>angular的双向绑定主要是脏数据检查，如果大量的检查，效率比较低。（双向绑定时向zone挂载一个异步函数，对数据改变是做处理，及时将变化反馈显示在页面上）可能就会输入延迟<br>拖拽（也是向zone挂载异步函数）则是因为angular对每个可移动像素的元素进行检测而且还可能涉及对dom的操作，当拖拽区域数量较为多时，绑定的函数就越多，angular需要检测的元素区域就越来越多，处理起来就越力不从心（即使元素隐藏也不代表不会进行变化检测）</p>
+<h3 id="解决"><a href="#解决" class="headerlink" title="解决"></a>解决</h3><ol>
+<li>对于双向绑定造成的输入延迟，停止使用双向绑定，改用单向绑定  </li>
+<li>拖拽因为拖拽过程需要检测页面变化，所以页面卡顿（数据量大的时候元素多需要检测得也多，我猜）。我们需要做的就是设置对某些操作不跟踪变化<figure class="highlight typescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.ngZone.runOutsideAngular(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>.dragEnter = <span class="keyword">this</span>.rd.listen(spanDom, <span class="string">'dragenter'</span>, <span class="keyword">this</span>.dragenterHandler.bind(<span class="keyword">this</span>));</span><br><span class="line">        <span class="keyword">this</span>.dragOver = <span class="keyword">this</span>.rd.listen(spanDom, <span class="string">'dragover'</span>, <span class="function">(<span class="params">e</span>) =&gt;</span> &#123;</span><br><span class="line">            e.preventDefault();</span><br><span class="line">        &#125;);</span><br><span class="line">    <span class="keyword">this</span>.dragLeave = <span class="keyword">this</span>.rd.listen(spanDom, <span class="string">'dragleave'</span>, <span class="keyword">this</span>.dragLeaveHandle.bind(<span class="keyword">this</span>));</span><br><span class="line">&#125;);</span><br><span class="line"><span class="keyword">this</span>.dragDrop = <span class="keyword">this</span>.rd.listen(spanDom, <span class="string">'drop'</span>, <span class="keyword">this</span>.dropHandler.bind(<span class="keyword">this</span>));</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>对频繁的操作（如dragover）不去触发变更检测。使用<code>NgZone</code>中的<code>runOutsideAngular</code>方法，angular不会对里面的变化进行跟踪。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>我对angular的变化检测也似懂非懂 -_- </p>
+
+      
+    </div>
+    <footer class="article-footer">
+
+      <time class="time" style="color: #777777;float: right;" datetime="2019-11-13T14:54:49.000Z" itemprop="datePublished">
+        &nbsp;&nbsp;<span class="month">2019-11-13 14:54:49</span><br>
+      </time>
+      <!-- <a data-url="http://yoursite.com/2019/11/13/angular-slow-performance/" data-id="ck2wy3l09000jhwv7qz9wrm5p" class="article-share-link">分享</a> -->
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+
   
     <article id="post-hobby" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
   <div class="article-meta">
@@ -254,7 +334,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-07-18T17:07:23.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-07-18 17:07:23</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/07/19/hobby/" data-id="cjytfdvbv000cp8v7mlgurdiq" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/07/19/hobby/" data-id="ck2wy3l0b000nhwv7fhcp0l0n" class="article-share-link">分享</a> -->
       
       
     </footer>
@@ -334,7 +414,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-07-08T14:43:50.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-07-08 14:43:50</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/07/08/middleware/" data-id="cjytfdvbt0008p8v7vvio9jvj" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/07/08/middleware/" data-id="ck2wy3l04000hhwv7x52v90o8" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/express/">express</a></li></ul>
@@ -420,7 +500,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-07-05T09:39:37.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-07-05 09:39:37</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/07/05/js-loop/" data-id="cjytfdvby000dp8v7eg7lwj6k" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/07/05/js-loop/" data-id="ck2wy3l02000dhwv7lu54eezs" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/js/">js</a></li></ul>
@@ -506,7 +586,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-06-11T14:23:38.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-06-11 14:23:38</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/06/11/angular-ngModel/" data-id="cjytfdvd60010p8v7pjv7x6dt" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/06/11/angular-ngModel/" data-id="ck2wy3kzz0008hwv7af2cfua1" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li></ul>
@@ -588,7 +668,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-06-11T11:27:40.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-06-11 11:27:40</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/06/11/angular/" data-id="cjytfdvd70011p8v7s7qdj35u" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/06/11/angular/" data-id="ck2wy3l01000chwv7ucrrgfrs" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/angular/">angular</a></li></ul>
@@ -665,7 +745,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-06-04T11:27:16.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-06-04 11:27:16</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/06/04/C-json/" data-id="cjytfdvbq0006p8v7bn5hgpdz" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/06/04/C-json/" data-id="ck2wy3kzx0007hwv7jfgyjnes" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/C/">C#</a></li></ul>
@@ -741,7 +821,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-06-01T15:44:08.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-06-01 15:44:08</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/06/01/dart/" data-id="cjytfdvbl0002p8v7eu9220l5" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/06/01/dart/" data-id="ck2wy3kzw0006hwv7l4mklnt6" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/dart/">dart</a></li></ul>
@@ -817,7 +897,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-05-30T09:33:14.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-05-30 09:33:14</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/05/30/song-poems/" data-id="cjytfdvbs0007p8v7qqn42md1" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/05/30/song-poems/" data-id="ck2wy3kzr0002hwv7gni7mhrm" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/宋词/">宋词</a></li></ul>
@@ -900,7 +980,7 @@
       <time class="time" style="color: #777777;float: right;" datetime="2019-05-29T10:02:37.000Z" itemprop="datePublished">
         &nbsp;&nbsp;<span class="month">2019-05-29 10:02:37</span><br>
       </time>
-      <!-- <a data-url="http://yoursite.com/2019/05/29/first-page/" data-id="cjytfdvbg0000p8v7eysmau6n" class="article-share-link">分享</a> -->
+      <!-- <a data-url="http://yoursite.com/2019/05/29/first-page/" data-id="ck2wy3kzk0000hwv7d8hbgn76" class="article-share-link">分享</a> -->
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ionic/">ionic</a></li></ul>
@@ -914,79 +994,11 @@
 
 
   
-    <article id="post-hello-world" class="wow slideInRight article article-type-post" itemscope itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2019/05/29/hello-world/" class="article-date">
-  <time class="post-time" datetime="2019-05-29T01:00:51.122Z" itemprop="datePublished">
-    <span class="post-month">5月</span><br>
-    <span class="post-day">29</span>
-  </time>
-</a>
-
-  </div>
-  <div class="article-inner">
-    
-    
-    <header class="article-header">
-      
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2019/05/29/hello-world/">流光容易把人抛。红了樱桃，绿了芭蕉。</a>
-    </h1>
-  
-
-      <div>
-        
-        
-        
-  &nbsp; | &nbsp;
-  <div class="view-box">
-    <span id="/2019/05/29/hello-world/" class="leancloud_visitors" data-flag-title="流光容易把人抛。红了樱桃，绿了芭蕉。">
-      阅读次数&nbsp;<span class="leancloud-visitors-count"></span>
-    </span>
-  </div>
-  
 
 
- &nbsp;&nbsp;
-        
-
-      </div>
-      <div>
-
-      </div>
-    </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-      <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-      
-      <p class="article-more-link">
-        <a href="/2019/05/29/hello-world/#more">Read More</a>
-      </p>
-      
-      
-    </div>
-    <footer class="article-footer">
-
-      <time class="time" style="color: #777777;float: right;" datetime="2019-05-29T01:00:51.122Z" itemprop="datePublished">
-        &nbsp;&nbsp;<span class="month">2019-05-29 01:00:51</span><br>
-      </time>
-      <!-- <a data-url="http://yoursite.com/2019/05/29/hello-world/" data-id="cjytfdvct000zp8v7c022bibf" class="article-share-link">分享</a> -->
-      
-      
-    </footer>
-  </div>
-  
-</article>
-
-
-
-
-  
-
+  <nav id="page-nav">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">next &raquo;</a>
+  </nav>
 </section>
         
           <aside id="sidebar">
@@ -1026,7 +1038,7 @@
     <h2 class="author">monica</h2>
     <h3 class="description">走上人生巅峰</h3>
     <div class="count-box">
-      <a href="/archives"><div><strong>10</strong><br>文章</div></a>
+      <a href="/archives"><div><strong>11</strong><br>文章</div></a>
       <a href="/categories"><div><strong>8</strong><br>分类</div></a>
       <a href="/tags"><div><strong>7</strong><br>标签</div></a>
     </div>
